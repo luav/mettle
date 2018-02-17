@@ -8,6 +8,8 @@
 mission is to provide a full toolbox to address your testing needs and to look
 good doing it.
 
+Why and how the **mettle** is better than magnituted of the existing unit test frameworks including [*Google Test*](https://github.com/google/googletest) and [*Boost.Test*](https://github.com/boostorg/test)? - The answer is in the post [*C&C++ Unit Test Frameworks to Speed-up Prototyping*](https://sdevprog.blogspot.ch/2018/02/c-unit-test-frameworks-to-speed-up.html), briefly the *mettle is the most concise and expressive unit test framework for C++ being as powerfull* as others.
+
 ## Features
 
 #### Build your own assertions
