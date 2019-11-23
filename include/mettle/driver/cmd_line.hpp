@@ -10,6 +10,7 @@
 #include <boost/any.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/version.hpp>
 
 #include "filters.hpp"
 #include "object_factory.hpp"
@@ -54,6 +55,7 @@ struct output_options {
   std::size_t runs = 1;
   bool show_terminal = false;
   bool show_time = false;
+  std::string file = "mettle.xml";
 };
 
 using logger_factory = object_factory<
@@ -112,21 +114,22 @@ METTLE_PUBLIC void
 validate(boost::any &v, const std::vector<std::string> &values, HANDLE*, int);
 #endif
 
+#if BOOST_VERSION < 106500 || !defined(METTLE_OPTIONAL_USING_BOOST)
 template<typename T>
 void validate(boost::any &v, const std::vector<std::string> &values,
               METTLE_OPTIONAL_NS::optional<T>*, int) {
-  using namespace boost::program_options;
   using optional_t = METTLE_OPTIONAL_NS::optional<T>;
 
-  if(v.empty())
-    v = optional_t();
-  auto *val = boost::any_cast<optional_t>(&v);
-  assert(val);
-
   boost::any a;
-  validate(a, values, static_cast<T*>(nullptr), 0);
-  *val = boost::any_cast<T>(a);
+  {
+    using namespace boost::program_options;
+    validators::check_first_occurrence(v);
+    validators::get_single_string(values);
+    validate(a, values, static_cast<T*>(nullptr), 0);
+  }
+  v = boost::any(optional_t(boost::any_cast<T>(a)));
 }
+#endif
 
 } // namespace boost
 
